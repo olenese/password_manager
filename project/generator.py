@@ -1,3 +1,5 @@
+######DEPRECATED######
+######DEPRECATED######
 from collections import UserDict
 from distutils.dep_util import newer_pairwise
 from email.generator import Generator
@@ -8,7 +10,6 @@ from .security import encrypt, decrypt
 from .generatorbackend import randomcharacter
 from . import db
 
-######DEPRECATED######
 
 
 # Creates the blueprint for the viewlogins page
