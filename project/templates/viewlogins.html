@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  Welcome, {{ name }}!
+</h1>
+<br>
+<br>
+<h1 class="title">
+  Your Logins:
+</h1>
+<div>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Location</th>
+        <th>USERID</th>
+        <th>Password</th>
+        <th>URL</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for login in logins %}
+      <tr>
+        <td>{{ login.id }}</td>
+        <td>{{ login.location }}</td>
+        <td>{{ login.username }}</td>
+        <td>{{ login.password }}</td>
+        <td>{{ login.url }}</td>
+        <td>{{ login.note }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+</div>
+
+{% endblock %}

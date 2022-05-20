@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script>
+    function togglePasswordVisibility() {
+const passwordVisibilityToggle = document.querySelector('#password-visibility-toggle');
+const passwordInput = document.querySelector('#password');
+const showIcon = '<span class="icon"><i class="fas fa-eye"></i></span>';
+const hideIcon = '<span class="icon"><i class="fas fa-eye-slash"></i></span>';
+
+  const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+
+  passwordInput.setAttribute('type', type);
+
+  passwordVisibilityToggle.innerHTML = type === 'password' ? showIcon : hideIcon;
+}
+</script>
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Add a login</h3>
+    <div class="box">
+        <form method="POST" action="/newlogin">
+            <div class="field">
+            <label class="label">Location</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" name="location" placeholder="Login location">
+                </div>
+            </div>
+            <div class="field">
+            <label class="label">Username</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" name="username" placeholder="Username input">
+                    <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                    <i class="fas fa-check"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Passwordtype</label>
+                <div class="select is-rounded is-medium">
+                    <select class="is-hovered" name="passwordselection">
+                        <option value="" disabled selected hidden>Select your passwordtype</option>
+                        <option value="1">Wordlist with latin words</option>
+                        <option value="2">Wordlist with nordic words</option>
+                        <option value="3">Random characters</option>
+                    </select>
+                </div>
+                <br>
+                <br>
+                
+                <button class="button is-info is-small is-rounded" type="submit">Generate a password</button>
+                <br>
+                <br>
+                <label class="label">Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    {% if password is defined %}
+                    <input class="input" id="password" name="password" type="text" placeholder="Password input" value={{ password }}>
+                    {% else %}
+                    <input class="input" id="password" name="password" type="password" placeholder="Password input">
+                    {% endif %}
+                    <button id="password-visibility-toggle" type="button" onclick="togglePasswordVisibility()">
+                        <span class="icon"><i class="fas fa-eye"></i></span> 
+                    </button>
+                    <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                    <i class="fas fa-check"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+            <label class="label">URL</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" name="url" placeholder="Web address">
+                    <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                    <i class="fas fa-check"></i>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="field">
+            <label class="label">Note</label>
+                <div class="control">
+                    <textarea class="textarea" name="note" placeholder="Textarea"></textarea>
+                </div>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth" type="submit">Add login</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+
+<form method="POST" action="/newlogin">
