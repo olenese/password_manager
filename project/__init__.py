@@ -9,7 +9,7 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://{user}:{password}@{server}/{database}'.format(user='olenese', password='Starheimen07', server='172.105.131.62', database='flask_test')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://{user}:{password}@{server}/{database}'.format(user='pythonuser', password='Sol i Bergen!', server='172.105.131.62', database='flask_test')
     app.secret_key = "super secret key"
 
     
