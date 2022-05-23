@@ -13,7 +13,7 @@ def checkpwn():
     for password in passwords:
         decrypted = decrypt(password.password)
         passwordid = password.id
-        sha = hashlib.sha256(decrypted.encode('utf-8'))
+        sha = hashlib.sha1(decrypted.encode('utf-8'))
         encryptedsha=sha.hexdigest()
         print(len(encryptedsha))
         shadictionary.update({passwordid:encryptedsha})
