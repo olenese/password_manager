@@ -18,7 +18,7 @@ def checkpwn():
         print(encryptedsha)
         encryptedsha = encryptedsha.hex()
         print(encryptedsha)
-        shadictionary.update({passwordid:encryptedsha})
+        shadictionary.update({passwordid:encryptedsha.upper()})
     print(shadictionary)
     response = []
     check_pass_api = 'https://api.pwnedpasswords.com/range/'
