@@ -14,16 +14,16 @@ def checkpwn():
         decrypted = decrypt(password.password)
         passwordid = password.id
         sha = hashlib.sha1(decrypted.encode('utf-8'))
-        encryptedsha=sha.hexdigest()
-        print(len(encryptedsha))
+        encryptedsha=sha.digest()
+        print(encryptedsha)
+        encryptedsha = encryptedsha.hex()
+        print(encryptedsha)
         shadictionary.update({passwordid:encryptedsha})
     print(shadictionary)
-    return
     response = []
     check_pass_api = 'https://api.pwnedpasswords.com/range/'
     api_key= '20252769e5c04f37ae9beeffc0496520'
     headers = []
-    print(len(sha))
     for k,v in shadictionary.items():
         headers.append(v[:5])
         header = v[:5]
