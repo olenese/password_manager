@@ -42,9 +42,10 @@ def create_app():
     from .viewlogins import viewlogins as manager_blueprint
     app.register_blueprint(manager_blueprint)
 
-    # blueprint for viewing the generator
-    from .generator import generator as generator_blueprint
-    app.register_blueprint(generator_blueprint)
+    # blueprint for changing a password
+    from .editpassword import editpassword as editpassword_blueprint
+    app.register_blueprint(editpassword_blueprint)
+
 
 
     return app
