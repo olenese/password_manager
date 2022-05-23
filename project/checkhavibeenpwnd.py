@@ -7,19 +7,16 @@ import re
 import argparse
 
 
-def checkpwn():
-    passwords = Logins.query.all()
+def checkpwn(luring):
+    passwords = luring
     shadictionary = {}
     for password in passwords:
         decrypted = decrypt(password.password)
         passwordid = password.id
         sha = hashlib.sha1(decrypted.encode('utf-8'))
         encryptedsha=sha.digest()
-        print(encryptedsha)
         encryptedsha = encryptedsha.hex()
-        print(encryptedsha)
         shadictionary.update({passwordid:encryptedsha.upper()})
-    print(shadictionary)
     response = []
     check_pass_api = 'https://api.pwnedpasswords.com/range/'
     api_key= '20252769e5c04f37ae9beeffc0496520'
@@ -41,7 +38,8 @@ def checkpwn():
         for line in realhash:
             #print(line)
             if v == line:
-                print('Password {} was found in the database'.format(k))
+                print(k)
+                return k
 
 
             

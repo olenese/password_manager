@@ -19,6 +19,13 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
+    userlogins = Logins.query.filter_by(userID=current_user.id).all()
+    leakedpasswords = []
+    for i in userlogins:
+        if i.id == checkpwn(userlogins):
+            leakedpasswords.append(i)
+    for i in leakedpasswords:
+        print(i.location)
     return render_template('profile.html', name=current_user.name)
 
 
