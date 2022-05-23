@@ -8,7 +8,6 @@ import argparse
 
 
 def checkpwn():
-    return
     passwords = Logins.query.all()
     shadictionary = {}
     for password in passwords:
@@ -18,6 +17,8 @@ def checkpwn():
         encryptedsha=sha.hexdigest()
         print(len(encryptedsha))
         shadictionary.update({passwordid:encryptedsha})
+    print(shadictionary)
+    return
     response = []
     check_pass_api = 'https://api.pwnedpasswords.com/range/'
     api_key= '20252769e5c04f37ae9beeffc0496520'
