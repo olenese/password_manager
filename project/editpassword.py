@@ -28,7 +28,8 @@ def changepassword():
         print(decrypted_login)
         # Appends the new list to the new_login_list list for each login. 
         new_login_list.append(decrypted_login)
-    print (new_login_list.location)
+    for i in new_login_list:
+        print(i.location)
 
     return render_template('editpassword.html', website=new_login_list)
 
