@@ -39,3 +39,9 @@ def passhpraseEN(length):
         for i in range(length):
             passphrase.append(line[i].strip("\n"))
     return "-".join(passphrase)
+
+def generatePIN(length):
+    pin = []
+    for i in range(length):
+        pin.append(str(random.randint(0,9)))
+    return "".join(pin)

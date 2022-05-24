@@ -5,6 +5,8 @@ from .models import Logins
 from .checkhavibeenpwnd import checkpwn
 from . import db
 from .generatorbackend import randomcharacter
+from .generatorbackend import passhpraseEN
+from .generatorbackend import generatePIN
 
 
 main = Blueprint('main', __name__)
@@ -30,13 +32,8 @@ def profile():
 
 # Creates the page for the users to add a login to their vault, the users are required to be logged in to view this page
 
+# GET route for adding a new login, used during navigation (in the page header)
 @main.route('/newlogin')
 @login_required
 def newlogin():
     return render_template('newlogin.html', name=current_user.name)
-
-
-@main.route('/newlogin',methods=['POST'])
-@login_required
-def generate():
-    return render_template('newlogin.html', name=current_user.name, password=randomcharacter(16))
