@@ -1,15 +1,65 @@
 from re import I, S
 import requests
 import hashlib
+from flask_login import login_required, current_user
 from .security import decrypt
 from .models import Logins
-import re
-import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
+
+def getpass():
+    # Gets the passwords from the user.
+    passwords = Logins.query.filter_by(userID=current_user.id).all()
+    shadictionary = {}
+    for password in passwords:
+        decrypted = decrypt(password.password)
+        passwordid = password.id
+        sha = hashlib.sha1(decrypted.encode('utf-8'))
+        encryptedsha=sha.digest()
+        encryptedsha = encryptedsha.hex()
+        shadictionary.update({passwordid:encryptedsha.upper()})
+    concurrency(shadictionary)
+
+processes = []
+def concurrency(shadictionary):
+    # Checks the passwords in a thread pool.
+    with ThreadPoolExecutor(max_workers=30) as executor:
+        for id, sha in shadictionary.items():
+            processes.append(executor.submit(checkpwn, id, sha))
+    for process in as_completed(processes):
+        output = process.result()
+        if output:
+            checkpasswords(output)
+        else:
+            print('No results found.')
+
+
+checkdict = {}
+def checkpwn(id, sha):
+    # Checks the password against the havibeenpwnd api.
+    checkdict.update({id:sha})
+    url = 'https://api.pwnedpasswords.com/range/' + sha[:5]
+    response = requests.get(url)
+    if response.status_code == 200:
+        output = response.text
+        return output
+    else:
+        return None
+
+def checkpasswords(output):
+    # Checks the return from checkpwn against the shadictionary.
+    for line in output.splitlines():
+        hash, count = line.split(':')
+        if hash in checkdict.values():
+            print(f'{hash} was found {count} times.')
+ 
+
+
+"""
+shadictionary = {}
 def checkpwn(luring):
     passwords = luring
-    shadictionary = {}
     for password in passwords:
         decrypted = decrypt(password.password)
         passwordid = password.id
@@ -41,8 +91,11 @@ def checkpwn(luring):
                 print(k)
                 return k
 
-
+processes = []
             
+with ThreadPoolExecutor(max_workers=10) as executor:
+    for id, password in shadictionary.items():    
+        processes.append(executor.submit(updatemerakidevices, serial, coordinates))
 
                 #if head+i == v:
                 #    print(f'Password {k} is pwned')
@@ -50,3 +103,4 @@ def checkpwn(luring):
     #for i in response:
     #    if i.split(':')[0] == shadictionary[v]:
     #        print(i, shadictionary[k])
+"""

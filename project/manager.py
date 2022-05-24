@@ -4,10 +4,7 @@ from flask import Blueprint, redirect, render_template, url_for, request, flash
 from .models import Logins, Users
 from .security import encrypt, decrypt
 from . import db
-from .generatorbackend import passphraseNO, randomcharacter, passhpraseEN
-from .generatorbackend import randomcharacter
-from .generatorbackend import passhpraseEN
-from .generatorbackend import generatePIN
+from .generatorbackend import randomcharacter, passhpraseEN, generatePIN
 
 manager = Blueprint('manager', __name__)
 
@@ -74,7 +71,7 @@ def newlogin_post():
         new_login = Logins(location=location, username=username, password=encrypt(finishedpassword), url=url, note=note, userID=current_user.id)
         db.session.add(new_login)
         db.session.commit()
-        return redirect(url_for('main.profile'))
+        return redirect(url_for('viewlogins.viewlogin'))
 
 def safe_cast(val, type, default=None):
     try:

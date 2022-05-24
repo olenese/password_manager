@@ -1,12 +1,10 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from flask import Blueprint, redirect, render_template, url_for, request, flash
-from .models import Logins
-from .checkhavibeenpwnd import checkpwn
 from . import db
-from .generatorbackend import randomcharacter
-from .generatorbackend import passhpraseEN
-from .generatorbackend import generatePIN
+from .generatorbackend import randomcharacter, passhpraseEN, generatePIN
+from .checkhavibeenpwnd import getpass
+
 
 
 main = Blueprint('main', __name__)
@@ -20,13 +18,7 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    userlogins = Logins.query.filter_by(userID=current_user.id).all()
-    leakedpasswords = []
-    for i in userlogins:
-        if i.id == checkpwn(userlogins):
-            leakedpasswords.append(i)
-    for i in leakedpasswords:
-        print(i.location)
+    getpass()
     return render_template('profile.html', name=current_user.name)
 
 
