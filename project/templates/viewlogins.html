@@ -1,24 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
+<!-- <h1 class="title">
   Hi, {{ name }}!
-</h1>
+</h1> -->
 <br>
 <br>
 <h1 class="title">
-  Your Logins:
+  Hi {{ name }}, here are your logins:
 </h1>
+<p>We have checked all your passwords against the <a class="has-text-link-dark" href="https://haveibeenpwned.com/" rel="noopener noreferrer" target="_blank">haveibeenpwned</a> database. If any of them have been breached, change the password immediately!</p>
+<br>
 <div class="table-container">
   <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
     <thead>
       <tr>
         <th style="text-align:center">ID</th>
-        <th style="text-align:center">Location</th>
-        <th style="text-align:center">USERID</th>
+        <th style="text-align:center">Website</th>
+        <th style="text-align:center">Username</th>
         <th style="text-align:center">Password</th>
         <th style="text-align:center">URL</th>
         <th style="text-align:center">Note</th>
+        <th style="text-align:center">Secure</th>
+        <th style="text-align:center">Edit</th>
       </tr>
     </thead>
     <tbody>
@@ -30,6 +34,24 @@
         <td>{{ login.password }}</td>
         <td>{{ login.url }}</td>
         <td>{{ login.note }}</td>
+        {% if login.is_secure %}
+        <td>
+        {% else %}
+        <td class="has-background-danger has-text-primary-light">
+        {% endif %}
+          {% if login.is_secure %}
+            Safe
+          {% else %}
+            Breached
+          {% endif %}
+        </td>
+        <td>
+          <a class="button" href="/edit-login/{{login.id}}">
+            <span class="icon">
+              <ion-icon name="create"></ion-icon>
+            </span>
+          </a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

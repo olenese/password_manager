@@ -1,4 +1,5 @@
 from re import I, S
+from unittest.util import _count_diff_all_purpose
 import requests
 import hashlib
 from flask_login import login_required, current_user
@@ -7,11 +8,13 @@ from .models import Logins
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
+shadictionary = {}
 
-def getpass():
+def getpass(userid):
     # Gets the passwords from the user.
-    passwords = Logins.query.filter_by(userID=current_user.id).all()
-    shadictionary = {}
+    print(userid)
+    passwords = Logins.query.filter_by(userID=userid).all()
+
     for password in passwords:
         decrypted = decrypt(password.password)
         passwordid = password.id
@@ -24,7 +27,7 @@ def getpass():
 processes = []
 def concurrency(shadictionary):
     # Checks the passwords in a thread pool.
-    with ThreadPoolExecutor(max_workers=30) as executor:
+    with ThreadPoolExecutor(max_workers=4) as executor:
         for id, sha in shadictionary.items():
             processes.append(executor.submit(checkpwn, id, sha))
     for process in as_completed(processes):
@@ -42,19 +45,56 @@ def checkpwn(id, sha):
     url = 'https://api.pwnedpasswords.com/range/' + sha[:5]
     response = requests.get(url)
     if response.status_code == 200:
-        output = response.text
-        return output
-    else:
-        return None
+        return response.content.decode('UTF-8').split('\r\n')
+    else :
+            print( 'No matches found')
 
 def checkpasswords(output):
     # Checks the return from checkpwn against the shadictionary.
-    for line in output.splitlines():
-        hash, count = line.split(':')
-        if hash in checkdict.values():
-            print(f'{hash} was found {count} times.')
- 
+    headers = []
+    for id, sha in checkdict.items():
+        headers.append(sha[:5])    
+    realhash = []
+    for line in output:
+        for head in headers:
+                realhash.append(head+line.split(':')[0])
+    print(shadictionary)
+    for k, v in shadictionary.items():
+        print(k, v)
+        for line in realhash:
+            if v == line:
+                print(k, v)
+                return k
+            else:
+                return None
 
+def is_pwned(password):
+    password_hash = hashlib.sha1(password.encode('UTF-8')).digest().hex().upper()
+    # For obvious security reasons, the pwnedpasswords API only accepts the first
+    # five characters of the hash, so they are never aware of the actual password.
+    # They return a list of partial matches, that we can use to compare against 
+    # the full passowrd hash defined above.
+    # ref: https://haveibeenpwned.com/API/v3#SearchingPwnedPasswordsByRange
+    lookup_token = password_hash[:5]
+    url = 'https://api.pwnedpasswords.com/range/' + lookup_token
+    response = requests.get(url)
+
+    # The request was not successful, let's not assume the worst,
+    # though we could return a non-boolean value to indicate that
+    # testing the password was unsuccessful.
+    if response.status_code != 200:
+        return False
+    
+    partial_matches = response.content.decode('UTF-8').split('\r\n')
+
+    for match in partial_matches:
+        partial_hash = match.split(':')[0]
+        pwned_hash = lookup_token + partial_hash
+
+        if pwned_hash == password_hash:
+            return True
+    
+    return False
 
 """
 shadictionary = {}
@@ -103,4 +143,10 @@ with ThreadPoolExecutor(max_workers=10) as executor:
     #for i in response:
     #    if i.split(':')[0] == shadictionary[v]:
     #        print(i, shadictionary[k])
+
+XXXXXFFD8BED494A664EC29F04475C05A34FFCE6
+7196557D85B5078825730AD9C2D90412A7CF09F9
+341E7A1966625B8C2C898A4A3955FDA43DA48B63
+FE0D3D361CF0B79D59CD8140D0AB2DFACE3
+DD92DFFAB5076D0FB2410D0A528838E91A2ECC75
 """
