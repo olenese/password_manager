@@ -20,4 +20,3 @@ class Logins(UserMixin, db.Model):
     url = db.Column(db.String(255))
     note = db.Column(db.String(1000))
     userID = db.Column(db.Integer, ForeignKey('users.id'))
-

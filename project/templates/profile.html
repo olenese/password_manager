@@ -5,6 +5,12 @@
   Hi, {{ name }}!
   
 </h1>
-
+{% if id is defined %}
+<h1>
+  {% for i in id %}
+    Your ID is: {{ id }}
+  {% endfor %}
+</h1>
+{% endif %}
 
 {% endblock %}

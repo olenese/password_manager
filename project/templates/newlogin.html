@@ -5,8 +5,8 @@
 function togglePasswordVisibility() {
     const passwordVisibilityToggle = document.querySelector('#password-visibility-toggle');
     const passwordInput = document.querySelector('#password');
-    const showIcon = '<span class="icon"><i class="fas fa-eye"></i></span>';
-    const hideIcon = '<span class="icon"><i class="fas fa-eye-slash"></i></span>';
+    const showIcon = '<ion-icon name="eye"></ion-icon>';
+    const hideIcon = '<ion-icon name="eye-off"></ion-icon>';
 
      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
 
@@ -53,19 +53,29 @@ function onPasswordTypeChange(event) {
 }
 </script>
 <div class="column is-4 is-offset-4">
-    <h3 class="title">Add a login</h3>
+    <h3 class="title">
+        {% if is_editing %}
+            Edit login
+        {% else %}
+            Add a login
+        {% endif %}
+    </h3>
     <div class="box">
+        {% if is_editing %}
+        <form method="POST" action="/edit-login/{{ id }}">
+        {% else %}
         <form method="POST" action="/newlogin">
+        {% endif %}
             <div class="field">
             <label class="label">Website</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="text" name="location" placeholder="Website">
+                    <input class="input" type="text" name="website" placeholder="Website" value="{{ website }}">
                 </div>
             </div>
             <div class="field">
             <label class="label">Username</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="text" name="username" placeholder="Username input">
+                    <input class="input" type="text" name="username" placeholder="Username input" value="{{ username }}">
                     <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                     </span>
@@ -84,17 +94,17 @@ function onPasswordTypeChange(event) {
                         <option value="3">Random characters</option> -->
                         {% if password_type is defined %}
                             <!-- TODO: check if there is a better syntax to handle conditional attributes -->
-                            {% if password_type == '1' %}
+                            {% if password_type == 1 %}
                                 <option value="1" selected>Random</option>
                             {% else %}
                                 <option value="1">Random</option>
                             {% endif %}
-                            {% if password_type == '2' %}
+                            {% if password_type == 2 %}
                                 <option value="2" selected>Memorable</option>
                             {% else %}
                                 <option value="2">Memorable</option>
                             {% endif %}
-                            {% if password_type == '3' %}
+                            {% if password_type == 3 %}
                                 <option value="3" selected>PIN</option>
                             {% else %}
                                 <option value="3">PIN</option>
@@ -109,36 +119,27 @@ function onPasswordTypeChange(event) {
                 <br>
                 <br>
                 <!-- TODO: need to adjust the min/max girth depending on which password type is chosen -->
-                {% if password_length is defined %}
                 <input
                     class="slider is-fullwidth"
                     id="password-length-slider"
                     step="1"
-                    min={{ password_min }}
-                    max={{ password_max }}
-                    value={{ password_length }}
+                    min="{{ password_min }}"
+                    max="{{ password_max }}"
+                    value="{{ password_length }}"
                     type="range"
                     name="password_length" 
                     onchange="onPasswordLengthChange(event)"
                 >
                 <span id="password-length">{{ password_length }}</span>
-                {% else %}
-                <input class="slider is-fullwidth" id="password-length-slider" step="1" min="8" max="64" value="16" type="range" name="password_length" onchange="onPasswordLengthChange(event)">
-                <span id="password-length">16</span>
-                {% endif %}
                 
                 <input class="button is-info is-small is-rounded" type="submit" name="action" value="Generate a password">
                 <br>
                 <br>
                 <label class="label">Password</label>
                 <div class="control has-icons-left has-icons-right">
-                    {% if password is defined %}
-                    <input class="input" id="password" name="password" type="text" placeholder="Password input" value={{ password }}>
-                    {% else %}
-                    <input class="input" id="password" name="password" type="password" placeholder="Password input">
-                    {% endif %}
+                    <input class="input" id="password" name="password" type="text" placeholder="Password input" value="{{ password }}">
                     <button class="button" id="password-visibility-toggle" type="button" onclick="togglePasswordVisibility()">
-                        <span class="icon"><i class="fas fa-eye"></i></span> 
+                        <ion-icon name="eye"></ion-icon>
                     </button>
                     <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
@@ -151,7 +152,7 @@ function onPasswordTypeChange(event) {
             <div class="field">
             <label class="label">URL</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="text" name="url" placeholder="Web address">
+                    <input class="input" type="text" name="url" placeholder="Web address" value="{{ url }}">
                     <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                     </span>
@@ -165,10 +166,17 @@ function onPasswordTypeChange(event) {
             <div class="field">
             <label class="label">Note</label>
                 <div class="control">
-                    <textarea class="textarea" name="note" placeholder="Textarea"></textarea>
+                    <textarea class="textarea" name="note" placeholder="Textarea">{{ note }}</textarea>
                 </div>
             </div>
-            <button class="button is-block is-info is-large is-fullwidth" type="submit">Add login</button>
+            
+            <button class="button is-block is-info is-large is-fullwidth" type="submit">
+                {% if is_editing %}
+                    Save
+                {% else %}
+                    Add login
+                {% endif %}
+            </button>
         </form>
     </div>
 </div>
