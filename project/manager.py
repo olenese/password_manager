@@ -83,7 +83,8 @@ class LoginViewModel():
 # def generatepassword():
 #     passwordtype = request.args.get('passwordselection')
 #     if passwordtype == '1':
-#         generatedpassword = passhpraseEN(4)
+#         gene
+# ratedpassword = passhpraseEN(4)
 #     elif passwordtype == '2':
 #         generatedpassword = passphraseNO(4)
 #     elif passwordtype == '3':

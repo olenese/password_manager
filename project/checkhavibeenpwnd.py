@@ -60,10 +60,8 @@ def checkpasswords(output):
                 realhash.append(head+line.split(':')[0])
     print(shadictionary)
     for k, v in shadictionary.items():
-        print(k, v)
         for line in realhash:
             if v == line:
-                print(k, v)
                 return k
             else:
                 return None
@@ -95,58 +93,3 @@ def is_pwned(password):
             return True
     
     return False
-
-"""
-shadictionary = {}
-def checkpwn(luring):
-    passwords = luring
-    for password in passwords:
-        decrypted = decrypt(password.password)
-        passwordid = password.id
-        sha = hashlib.sha1(decrypted.encode('utf-8'))
-        encryptedsha=sha.digest()
-        encryptedsha = encryptedsha.hex()
-        shadictionary.update({passwordid:encryptedsha.upper()})
-    response = []
-    check_pass_api = 'https://api.pwnedpasswords.com/range/'
-    api_key= '20252769e5c04f37ae9beeffc0496520'
-    headers = []
-    for k,v in shadictionary.items():
-        headers.append(v[:5])
-        header = v[:5]
-        shortenedresponse = requests.get(check_pass_api+header)
-        if shortenedresponse.status_code == 200:
-            response.append(shortenedresponse.content.decode('UTF-8').split('\r\n'))
-        else :
-            print( 'No matches found')
-    realhash = []
-    for line in response:
-        for item in line:
-            for head in headers:
-                realhash.append(head+item.split(':')[0])
-    for k, v in shadictionary.items():
-        for line in realhash:
-            #print(line)
-            if v == line:
-                print(k)
-                return k
-
-processes = []
-            
-with ThreadPoolExecutor(max_workers=10) as executor:
-    for id, password in shadictionary.items():    
-        processes.append(executor.submit(updatemerakidevices, serial, coordinates))
-
-                #if head+i == v:
-                #    print(f'Password {k} is pwned')
-
-    #for i in response:
-    #    if i.split(':')[0] == shadictionary[v]:
-    #        print(i, shadictionary[k])
-
-XXXXXFFD8BED494A664EC29F04475C05A34FFCE6
-7196557D85B5078825730AD9C2D90412A7CF09F9
-341E7A1966625B8C2C898A4A3955FDA43DA48B63
-FE0D3D361CF0B79D59CD8140D0AB2DFACE3
-DD92DFFAB5076D0FB2410D0A528838E91A2ECC75
-"""
