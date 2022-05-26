@@ -23,6 +23,8 @@ function onPasswordLengthChange(event) {
 
 function onPasswordTypeChange(event) {
     const passwordLengthSlider = document.querySelector('#password-length-slider');
+    const passwordMin = document.querySelector('#password-min');
+    const passwordMax = document.querySelector('#password-max');
     const counter = document.querySelector('#password-length');
 
     switch (event.target.value) {
@@ -30,6 +32,8 @@ function onPasswordTypeChange(event) {
         case '1':
             passwordLengthSlider.setAttribute('min', '16');
             passwordLengthSlider.setAttribute('max', '64');
+            passwordMin.value = '16';
+            passwordMax.value = '64';
             passwordLengthSlider.value = '16';
             counter.innerText = '16';
             break;
@@ -37,6 +41,8 @@ function onPasswordTypeChange(event) {
         case '2':
             passwordLengthSlider.setAttribute('min', '2');
             passwordLengthSlider.setAttribute('max', '6');
+            passwordMin.value = '2';
+            passwordMax.value = '6';
             passwordLengthSlider.value = '4';
             counter.innerText = '4';
             break;
@@ -44,6 +50,8 @@ function onPasswordTypeChange(event) {
         case '3':
             passwordLengthSlider.setAttribute('min', '4');
             passwordLengthSlider.setAttribute('max', '24');
+            passwordMin.value = '4';
+            passwordMax.value = '24';
             passwordLengthSlider.value = '6';
             counter.innerText = '6';
             break;
@@ -118,7 +126,9 @@ function onPasswordTypeChange(event) {
                 </div>
                 <br>
                 <br>
-                <!-- TODO: need to adjust the min/max girth depending on which password type is chosen -->
+                <!-- Hacky solution to ensure that the password min and max values are sent to and from server. The hiddem attribute makes the elements hidden -->
+                <input id="password-min" type="text" name="password_min" value="{{ password_min }}" hidden>
+                <input id="password-max" type="text" name="password_max" value="{{ password_max }}" hidden>
                 <input
                     class="slider is-fullwidth"
                     id="password-length-slider"
@@ -137,7 +147,8 @@ function onPasswordTypeChange(event) {
                 <br>
                 <label class="label">Password</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" id="password" name="password" type="text" placeholder="Password input" value="{{ password }}">
+                    <!-- autocomplete off disables the save password prompt for our site when generating a password for a different site -->
+                    <input class="input" id="password" name="password" type="text" placeholder="Password input" value="{{ password }}" autocomplete="off">  
                     <button class="button" id="password-visibility-toggle" type="button" onclick="togglePasswordVisibility()">
                         <ion-icon name="eye"></ion-icon>
                     </button>

@@ -1,6 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script>
+  function togglePasswordVisibility(id) {
+    const passwordVisibilityToggle = document.querySelector(`#password-visibility-toggle-${id}`);
+    const passwordText = document.querySelector(`#password-text-${id}`);
+    const plaintext = passwordText.getAttribute('data-plaintext');
+    const showIcon = '<ion-icon name="eye"></ion-icon>';
+    const hideIcon = '<ion-icon name="eye-off"></ion-icon>';
+    
+    if (passwordText.hasAttribute('data-password-hidden')) {
+      passwordText.innerHTML = plaintext;
+      passwordVisibilityToggle.innerHTML = hideIcon;
+      passwordText.removeAttribute('data-password-hidden');
+    } else {
+      passwordText.innerHTML = '&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;';
+      passwordVisibilityToggle.innerHTML = showIcon;
+      passwordText.setAttribute('data-password-hidden', '');
+    }
+  }
+
+  function copyToClipboard(id) {
+    const passwordText = document.querySelector(`#password-text-${id}`);
+    const plaintext = passwordText.getAttribute('data-plaintext');
+    const input = document.createElement('input');
+    input.value = plaintext;
+
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+  }
+</script>
 <!-- <h1 class="title">
   Hi, {{ name }}!
 </h1> -->
@@ -19,6 +50,7 @@
         <th style="text-align:center">Website</th>
         <th style="text-align:center">Username</th>
         <th style="text-align:center">Password</th>
+        <th style="text-align:center"></th>
         <th style="text-align:center">URL</th>
         <th style="text-align:center">Note</th>
         <th style="text-align:center">Secure</th>
@@ -31,7 +63,17 @@
         <td>{{ login.id }}</td>
         <td>{{ login.location }}</td>
         <td>{{ login.username }}</td>
-        <td>{{ login.password }}</td>
+        <td id="password-text-{{login.id}}" data-plaintext="{{ login.password }}" data-password-hidden>&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</td>
+        <td>
+          <button
+            id="password-visibility-toggle-{{ login.id }}"
+            class="button"
+            type="button"
+            onclick="togglePasswordVisibility({{ login.id }})"
+          >
+            <ion-icon name="eye"></ion-icon>
+          </button>
+        </td>
         <td>{{ login.url }}</td>
         <td>{{ login.note }}</td>
         {% if login.is_secure %}
@@ -51,6 +93,15 @@
               <ion-icon name="create"></ion-icon>
             </span>
           </a>
+        </td>
+        <td>
+          <button
+            class="button"
+            type="button"
+            onclick="copyToClipboard({{ login.id }})"
+          >
+            <ion-icon name="copy"></ion-icon>
+          </button>
         </td>
       </tr>
       {% endfor %}
