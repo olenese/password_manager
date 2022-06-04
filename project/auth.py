@@ -28,7 +28,7 @@ def signup_post():
         flash('Password must be at least 16 characters long.')
     if user:
         flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
+        return redirect(url_for('auth.login'))
     new_user = Users(email=email, name=name, password=bcrypt.hashpw(password.encode('utf-8'), salt))
     db.session.add(new_user)
     db.session.commit()
