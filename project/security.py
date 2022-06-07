@@ -12,7 +12,7 @@ BLOCK_SIZE = 16
 key = 'Tullebukk123'.encode()
 key2 = hashlib.sha256(key).digest()
 
-print(key2)
+
 # Define the function to encrypt the message using AES encryption. The known key and the random key are used to encrypt the string.
 def encrypt(raw):
     BS = cryptoAES.block_size
