@@ -23,5 +23,5 @@ requests==2.31.0
 shellescape==3.8.1
 six==1.16.0
 SQLAlchemy==1.4.36
-urllib3==1.26.18
+urllib3==2.6.0
 Werkzeug==3.0.1
